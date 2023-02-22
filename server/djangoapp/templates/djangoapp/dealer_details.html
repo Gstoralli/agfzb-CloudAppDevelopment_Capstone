@@ -10,9 +10,40 @@
     <body>
 
     <!--Add a nav bar here -->
-
+    {% include 'partials/_navbar.html' %}
     <!-- Add reviews as cards -->
-
+    <div class='container mt-2'>
+        <div class='row'>
+            <div class="col-12"><h3 class='text-center'>Reviews Dealership #{{dealer_id}}</h3></div>
+            <div class="col-12">
+                <table class='table table-bordered'>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Purchase</th>
+                        <th>Review</th>
+                        <th>Sentiment</th>
+                        <th>Purchase Date</th>
+                        <th>Car Make</th>
+                        <th>Car Model</th>
+                        <th>Car Year</th>
+                    </tr>
+                    {% for review in reviews %}
+                        <tr>
+                            <td>{{ review.id }}</td>
+                            <td>{{ review.name }}</td>
+                            <td>{{ review.purchase }}</td>
+                            <td>{{ review.review }}</td>
+                            <td>{{ review.sentiment }}</td>
+                            <td>{{ review.purchase_date }}</td>
+                            <td>{{ review.car_make }}</td>
+                            <td>{{ review.car_model }}</td>
+                            <td>{{ review.car_year }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
     </body>
 
 </html>

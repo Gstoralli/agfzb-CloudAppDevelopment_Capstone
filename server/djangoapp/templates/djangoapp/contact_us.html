@@ -14,25 +14,14 @@
 </head>
 
     <body>
-        <!--Add a nav bar here -->
-        {% include 'partials/_navbar.html' %}
-        <!--Add a dealer table here -->
-        <div class='container mt-2'>
-            <table class='table table-bordered'>
-                {% for dealer in dealerships %}
-                    <tr>
-                        <td>{{ dealer.id }}</td>
-                        <td>{{ dealer.short_name }}</td>
-                        <td>{{ dealer.address }}</td>
-                        <td>{{ dealer.city }}</td>
-                        <td>{{ dealer.state }}</td>
-                        <td>{{ dealer.zip }}</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                {% endfor %}
-            </table>    
-        </div>
+    <!--Add a nav bar here -->
+    {% include 'partials/_navbar.html' %}
+    
+    <html>
+        <h1>
+            Contact Us
+        </h1>
+    </html>
 
     </body>
 
