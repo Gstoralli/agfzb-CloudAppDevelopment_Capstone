@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
@@ -87,8 +88,9 @@ def get_dealer_reviews_from_cf(url, dealerId):
 # def analyze_review_sentiments(text):
 def analyze_review_sentiments(dealerreview):
     # Call get_request with a URL parameter
-    url     = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/e8071ead-5251-41a6-943c-97e72fa98a50/v1/analyze"
-    api_key = "3p2jYBbZFMYZ1n2jDTxpqWkmA4Bo73-LM8mWyLOXPOsw"
+    url     = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/" + os.environ['WATSON_URL_KEY'] + "/v1/analyze"
+    # GET ENVIRONMENT VARIABLES
+    api_key = os.environ['WATSON_APIKEY']
 
     json_result = get_request(url, text=dealerreview, api_key=api_key, version="2020-08-01", features="sentiment", return_analyzed_text=True)
     if json_result:
@@ -98,15 +100,3 @@ def analyze_review_sentiments(dealerreview):
         # Create a sentiment object with the label and score
         sentiment_obj = {"label": sentiment, "score": score}
         return sentiment_obj
-
-
-#curl -X POST -u "apikey:3p2jYBbZFMYZ1n2jDTxpqWkmA4Bo73-LM8mWyLOXPOsw" --header "Content-Type: application/json" --data '{
-#  "url": "http://newsroom.ibm.com/Guerbet-and-IBM-Watson-Health-Announce-Strategic-Partnership-for-Artificial-Intelligence-in-Medical-Imaging-Liver",
-#  "features": {
-#    "sentiment": {},
-#    "categories": {},
-#    "concepts": {},
-#    "entities": {},
-#    "keywords": {}
-#  }
-#}' "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/e8071ead-5251-41a6-943c-97e72fa98a50/v1/analyze?version=2019-07-12"

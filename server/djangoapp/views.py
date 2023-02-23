@@ -8,6 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 import logging
+import os
 import json
 
 # Get an instance of a logger
@@ -86,7 +87,7 @@ def registration_request(request):
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     if request.method == "GET":
-        url = "https://us-south.functions.appdomain.cloud/api/v1/web/gustavo%40novahub.com.br_dev/default/get-dealership.json"
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/" + os.environ['IBM_URL_DOMAIN'] + "/default/get-dealership.json"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
@@ -98,7 +99,7 @@ def get_dealerships(request):
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
     if request.method == "GET":
-        url = "https://us-south.functions.appdomain.cloud/api/v1/web/gustavo%40novahub.com.br_dev/default/get-review-python.json"
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/" + os.environ['IBM_URL_DOMAIN'] + "/default/get-review-python.json"
         # Get dealers from the URL
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         # Concat all dealer's short name
