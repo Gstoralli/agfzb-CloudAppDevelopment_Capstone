@@ -7,13 +7,13 @@ from requests.auth import HTTPBasicAuth
 
 # Create a `get_request` to make HTTP GET requests
 def get_request(url, **kwargs):
-    print(kwargs)
-    print("GET from {} ".format(url))
+    #print(kwargs)
+    #print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
         if kwargs is not None and ('api_key' in kwargs.keys()):
-            print("com auth")
-            print("api_key: {}".format(kwargs['api_key']))
+            #print("com auth")
+            #print("api_key: {}".format(kwargs['api_key']))
             params = dict()
             params["text"] = kwargs["text"]
             params["version"] = kwargs["version"]
@@ -23,9 +23,26 @@ def get_request(url, **kwargs):
             response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
                                     auth=HTTPBasicAuth('apikey', kwargs['api_key']))
         else:
-            print("sem auth")
+            #print("sem auth")
             response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
+    except:
+        # If any error occurs
+        print("Network exception occurred")
+    status_code = response.status_code
+    #print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
+
+
+# Create a `post_request` to make HTTP POST requests
+# e.g., response = requests.post(url, params=kwargs, json=payload)
+def post_request(url, payload, **kwargs):
+    print(kwargs)
+    print("POST to {} ".format(url))
+    try:
+        # Call post method of requests library with URL, parameters and data
+        response = requests.post(url, params=kwargs, json=payload)
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -33,10 +50,6 @@ def get_request(url, **kwargs):
     print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
     return json_data
-
-
-# Create a `post_request` to make HTTP POST requests
-# e.g., response = requests.post(url, params=kwargs, json=payload)
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 def get_dealers_from_cf(url, **kwargs):

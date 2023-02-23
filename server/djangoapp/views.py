@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -108,6 +108,41 @@ def get_dealer_details(request, dealer_id):
         return render(request, 'djangoapp/dealer_details.html', {'reviews': reviews, 'dealer_id': dealer_id})
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):
+    if request.method == "GET":
+        return render(request, 'djangoapp/add_review.html', {'dealer_id': dealer_id})
+    elif request.method == "POST":
+        # CHECK USER LOGIN
+        if not request.user.is_authenticated:
+            messages.error(request, "You must login to submit a review.")
+            return redirect('djangoapp:login')
+        review = {}
+        review["name"] = request.POST.get('name')
+        review["dealership"] = dealer_id
+        review["review"] = request.POST.get('review')
+        review["purchase"] = request.POST.get('purchasecheck')
+        review["another"] = ""
+        review["purchase_date"] = request.POST.get('purchasedate')
+        review["car_make"] = request.POST.get('car_make')
+        review["car_model"] = request.POST.get('car_model')
+        review["car_year"] = request.POST.get('car_year')
+
+        json_payload = {
+            "review": review
+        }
+        #review["sentiment"] = ""
+        #review["id"] = 0
+        #review["purchase_date"] = datetime.strptime(review["purchase_date"], '%Y-%m-%d').strftime('%m/%d/%Y')
+        url = "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/" + os.environ['IBM_URL_DOMAIN'] + "/actions/add-review"
+        # Get dealers from the URL
+        couch_url = "https://" + os.environ['CLOUDANT_URL_KEY'] + ".cloudantnosqldb.appdomain.cloud"
+        response = post_request(url, json_payload, IAM_API_KEY=os.environ['CLOUDANT_APIKEY'], COUCH_URL=couch_url)
+
+        if response.status_code == 200:
+            messages.success(request, "Review added successfully.")
+        else:
+            print(response.text)
+            messages.error(request, "There was an error adding your review.")
+
+        return redirect('djangoapp:dealer_details', dealer_id=dealer_id)
 
