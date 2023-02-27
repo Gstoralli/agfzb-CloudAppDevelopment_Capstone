@@ -1,8 +1,16 @@
 import requests
+from requests.auth import HTTPBasicAuth, AuthBase
+class BearerAuth(requests.auth.AuthBase):
+    def __init__(self, token):
+        self.token = token
+    def __call__(self, r):
+        r.headers["authorization"] = "Bearer " + self.token
+        return r
 import json
 import os
 from .models import CarDealer, DealerReview
-from requests.auth import HTTPBasicAuth
+
+
 
 
 # Create a `get_request` to make HTTP GET requests
@@ -41,8 +49,9 @@ def post_request(url, payload, **kwargs):
     print(kwargs)
     print("POST to {} ".format(url))
     try:
-        # Call post method of requests library with URL, parameters and data
-        response = requests.post(url, params=kwargs, json=payload)
+        # Call post method of requests library with URL, parameters and data and bearer token
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/gustavo%40novahub.com.br_dev/default/add-review"
+        response = requests.post(url, params=kwargs, json=payload, auth=HTTPBasicAuth('authorization', "Bearer " + kwargs['IAM_API_KEY']))
     except:
         # If any error occurs
         print("Network exception occurred")

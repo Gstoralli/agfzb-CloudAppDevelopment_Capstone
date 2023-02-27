@@ -19,8 +19,6 @@ logger = logging.getLogger(__name__)
 
 
 # Create an `about` view to render a static about page
-# def about(request):
-# ...
 def about_us(request):
     context = {}
     if request.method == 'GET':
@@ -120,16 +118,17 @@ def add_review(request, dealer_id):
         review["name"] = request.POST.get('name')
         review["dealership"] = dealer_id
         review["review"] = request.POST.get('review')
-        review["purchase"] = request.POST.get('purchasecheck')
+        review["purchase"] = 0
         review["another"] = ""
-        review["purchase_date"] = request.POST.get('purchasedate')
-        review["car_make"] = request.POST.get('car_make')
-        review["car_model"] = request.POST.get('car_model')
-        review["car_year"] = request.POST.get('car_year')
+        review["purchase_date"] = "2021-12-01"
+        review["car_make"] = "Toyota"
+        review["car_model"] = "Corolla"
+        review["car_year"] = 2020
+        review["IAM_API_KEY"] = os.environ['CLOUDANT_APIKEY']
+        review["COUCH_URL"] = "https://" + os.environ['CLOUDANT_URL_KEY'] + ".cloudantnosqldb.appdomain.cloud"
 
-        json_payload = {
-            "review": review
-        }
+        json_payload = review
+        
         #review["sentiment"] = ""
         #review["id"] = 0
         #review["purchase_date"] = datetime.strptime(review["purchase_date"], '%Y-%m-%d').strftime('%m/%d/%Y')
@@ -138,7 +137,7 @@ def add_review(request, dealer_id):
         couch_url = "https://" + os.environ['CLOUDANT_URL_KEY'] + ".cloudantnosqldb.appdomain.cloud"
         response = post_request(url, json_payload, IAM_API_KEY=os.environ['CLOUDANT_APIKEY'], COUCH_URL=couch_url)
 
-        if response.status_code == 200:
+        if response.status_code == 204:
             messages.success(request, "Review added successfully.")
         else:
             print(response.text)

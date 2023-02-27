@@ -14,11 +14,33 @@
         {% include 'partials/_navbar.html' %}
 
         <!-- Add html form -->
-        <div class="container">
-            <div class="row border border-dark rounded my-1 py-1">
-                <div class="col-12"><h3 class='text-center'>Add Review</h3></div>
+        <form action="review" method="POST">
+            {% csrf_token %}
+            <div class="container">
+                <div class="row border border-dark rounded my-1 py-1">
+                    <div class="col-12"><h3 class='text-center'>Add Review</h3></div>
+                    <div class="col-12 col-md-3">
+                        <label>Dealership ID</label>
+                        <input type="number" min='0' step="1" class="form-control text-right" name="dealer_id" value="{{dealer_id}}" readonly>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col-12 col-md-3">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col-12">
+                        <label>Review</label>
+                        <textarea class="form-control" name="review" rows="5" cols="50" required></textarea>
+                    </div>
+                    <div class="w-100"></div>
+                    <!-- submit button -->
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </form>
         
     </body>
 </html>
