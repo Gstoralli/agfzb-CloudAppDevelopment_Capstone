@@ -14,7 +14,7 @@
         {% include 'partials/_navbar.html' %}
 
         <!-- Add html form -->
-        <form action="review" method="POST">
+        <form action="{% url 'djangoapp:add_review' dealer_id%}" method="POST">
             {% csrf_token %}
             <div class="container">
                 <div class="row border border-dark rounded my-1 py-1">

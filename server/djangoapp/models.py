@@ -66,6 +66,7 @@ class DealerReview:
         self.car_year = car_year
         self.sentiment = sentiment
         self.id = id
+        self.sentiment_escaped = ""
 
     def __str__(self):
         return "Dealer Name : " + self.dealership

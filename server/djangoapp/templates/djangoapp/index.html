@@ -14,26 +14,46 @@
 </head>
 
     <body>
+        
         <!--Add a nav bar here -->
         {% include 'partials/_navbar.html' %}
         <!--Add a dealer table here -->
         <div class='container mt-2'>
-            <table class='table table-bordered'>
-                {% for dealer in dealerships %}
+            <table class="table" id="table" data-filter-control="true">
+                <thead>
                     <tr>
-                        <td>{{ dealer.id }}</td>
-                        <td>{{ dealer.short_name }}</td>
-                        <td>{{ dealer.address }}</td>
-                        <td>{{ dealer.city }}</td>
-                        <td>{{ dealer.state }}</td>
-                        <td>{{ dealer.zip }}</td>
-                        <td></td>
-                        <td></td>
+                        <th data-field="id" data-filter-control="input">ID</th>
+                        <th data-field="short_name" data-filter-control="input">Name</th>
+                        <th data-field="address" data-filter-control="input">Address</th>
+                        <th data-field="city" data-filter-control="input">City</th>
+                        <th data-field="state" data-filter-control="select">State</th>
+                        <th data-field="zip" data-filter-control="input">Zip</th>
+                        <th data-field="purchase" data-filter-control="select">Purchase</th>
+                        <th data-field="review" data-filter-control="select">Review</th>
                     </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                    {% for dealer in dealerships %}
+                        <tr>
+                            <td>{{ dealer.id }}</td>
+                            <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.short_name}}</a></td>
+                            <td>{{ dealer.address }}</td>
+                            <td>{{ dealer.city }}</td>
+                            <td>{{ dealer.state }}</td>
+                            <td>{{ dealer.zip }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>    
         </div>
 
     </body>
+    <script>
+        $(function() {
+            $('#table').bootstrapTable()
+        })
+    </script>
 
 </html>

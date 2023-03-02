@@ -88,6 +88,7 @@ def get_dealerships(request):
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/" + os.environ['IBM_URL_DOMAIN'] + "/default/get-dealership.json"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
+        
         # Concat all dealer's short name
         #dealer_names = '<br>'.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
@@ -100,9 +101,9 @@ def get_dealer_details(request, dealer_id):
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/" + os.environ['IBM_URL_DOMAIN'] + "/default/get-review-python.json"
         # Get dealers from the URL
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
-        # Concat all dealer's short name
-        #dealer_names = '<br>'.join([dealer.short_name for dealer in dealerships])
-        # Return a list of dealer short name
+        for review in reviews:
+            review.sentiment_escaped = review.sentiment['label']
+        
         return render(request, 'djangoapp/dealer_details.html', {'reviews': reviews, 'dealer_id': dealer_id})
 
 # Create a `add_review` view to submit a review
@@ -137,11 +138,13 @@ def add_review(request, dealer_id):
         couch_url = "https://" + os.environ['CLOUDANT_URL_KEY'] + ".cloudantnosqldb.appdomain.cloud"
         response = post_request(url, json_payload, IAM_API_KEY=os.environ['CLOUDANT_APIKEY'], COUCH_URL=couch_url)
 
-        if response.status_code == 204:
-            messages.success(request, "Review added successfully.")
-        else:
-            print(response.text)
-            messages.error(request, "There was an error adding your review.")
+        return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+
+        #if response.status_code == 204:
+        #    messages.success(request, "Review added successfully.")
+        #else:
+        #    print(response.text)
+        #    messages.error(request, "There was an error adding your review.")
 
         return redirect('djangoapp:dealer_details', dealer_id=dealer_id)
 
